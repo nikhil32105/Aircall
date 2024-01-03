@@ -7,7 +7,11 @@ export function getCallList() {
 }
 
 export function archiveCall(id,params) {
-  console.log(id,params,'PARAMS')
   let _url = `${baseUrl.baseUrl}${endPoint.activities}/${id}`;
   return axios.patch(_url,params)
+}
+
+export function getCallDetailsById(id) {
+  let _url = `${baseUrl.baseUrl}${endPoint.activities}/${id}`;
+  return axios.get(_url)
 }
