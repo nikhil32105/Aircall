@@ -2,7 +2,6 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { baseUrl, endPoint } from '../config/url';
 
-
 const CallList = () => {
   const [archivedCallList, setArchivedCallList] = useState([])
   const [checkArchived, setCheckArchived] = useState(false)
