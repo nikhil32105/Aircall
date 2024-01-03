@@ -1,7 +1,30 @@
-import React from 'react'
-import { archiveCall  , getCallDetailsById} from '../services/call'
+import React, { useState } from 'react'
+import { archiveCall, getCallDetailsById } from '../services/call'
+import "../App.css"
+import moment from 'moment'
+import Popover from '@mui/material/Popover';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import DownArrow from "../assests/down-arrow.png";
+
 
 const UnArchivedCall = ({ list }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleArchiveAndClose = (data) => {
+    handleArchived(data);
+    handleClose(); // Close the Popover after handling the archived action
+  };
+
+
   const handleArchived = async (data) => {
     try {
       let params = { is_archived: !data?.is_archived }
@@ -22,33 +45,52 @@ const UnArchivedCall = ({ list }) => {
   }
 
 
+
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
+
+
   return (
-    < div >
+    < div className="aircall-phone-container" >
       <h2>Aircall Phone</h2>
-      {/* <ul>
-        {list?.length > 0 && list?.map((contact) => (
-          <li key={contact?.id}>
-            {contact.direction}: {contact.call_type}<button onClick={() => handleArchived(contact)}>X</button>
-          </li>
-        ))}
-      </ul> */}
-      <ul>
+      <ul className="chat-list">
         {list.map((contact) => (
-          <li key={contact?.id}>
+          <li key={contact?.id} className="chat-item">
             <span
               style={{ textDecoration: 'underline', cursor: 'pointer', color: 'red' }}
               onClick={() => handleLinkClick(contact?.id)}
+              className="direction"
             >
-              {contact.call_type ?? "NA"}
+              {contact.to ?? "NA"}
             </span>
-            : {contact.from ?? "NA"}
-            <button onClick={() => handleArchived(contact)}>X</button>
+            : {contact.call_type ?? "NA"}
+            :{moment(contact?.created_at).format('HH:mm:ss')}
+            {/* <button onClick={() => handleArchived(contact)}>X</button> */}
+            <div>
+              <Button aria-describedby={id} onClick={handleClick}>
+                <img src={DownArrow} alt="Down Arrow" style={{ width: '16px', height: '16px' }} />
+              </Button>
+              <Popover
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+                PaperProps={{ elevation: 0 }}
+
+              >
+                <Typography sx={{ p: 2, cursor: 'pointer', border: '1px solid #ccc', align: 'right', display: 'flex', justifyContent: 'flex-end' }} onClick={() => handleArchiveAndClose(contact)}>Archive</Typography>
+              </Popover>
+            </div>
           </li>
         ))}
       </ul>
-
-    </ div>
-  )
-}
+    </div>
+  );
+};
 
 export default UnArchivedCall
