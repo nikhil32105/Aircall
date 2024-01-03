@@ -39,7 +39,7 @@ const ArchivedCall = ({ list }) => {
               {contact.call_type ?? "NA"}
             </span>
             : {contact.from ?? "NA"}
-            <button onClick={() => handleArchived(contact?.id)}>X</button>
+            <button onClick={() => handleArchived(contact)}>X</button>
           </li>
         ))}
       </ul>

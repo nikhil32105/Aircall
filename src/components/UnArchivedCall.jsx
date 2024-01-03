@@ -1,5 +1,5 @@
 import React from 'react'
-import { archiveCall } from '../services/call'
+import { archiveCall  , getCallDetailsById} from '../services/call'
 
 const UnArchivedCall = ({ list }) => {
   const handleArchived = async (data) => {
@@ -11,14 +11,38 @@ const UnArchivedCall = ({ list }) => {
       console.error('Error fetching data:', error);
     }
   }
-  
+
+  const handleLinkClick = async (id) => {
+    try {
+      const response = await getCallDetailsById(id)
+      console.log(response, '..............response')
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  }
+
+
   return (
     < div >
       <h2>Aircall Phone</h2>
-      <ul>
+      {/* <ul>
         {list?.length > 0 && list?.map((contact) => (
           <li key={contact?.id}>
             {contact.direction}: {contact.call_type}<button onClick={() => handleArchived(contact)}>X</button>
+          </li>
+        ))}
+      </ul> */}
+      <ul>
+        {list.map((contact) => (
+          <li key={contact?.id}>
+            <span
+              style={{ textDecoration: 'underline', cursor: 'pointer', color: 'red' }}
+              onClick={() => handleLinkClick(contact?.id)}
+            >
+              {contact.call_type ?? "NA"}
+            </span>
+            : {contact.from ?? "NA"}
+            <button onClick={() => handleArchived(contact)}>X</button>
           </li>
         ))}
       </ul>
