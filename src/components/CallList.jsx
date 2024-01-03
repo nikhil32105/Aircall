@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ArchivedCall from './ArchivedCall';
 
-const PhoneDirectory = () => {
+const CallList = () => {
   const [archivedCallList, setArchivedCallList] = useState([])
   const [checkArchived, setCheckArchived] = useState(false)
 
@@ -20,28 +20,20 @@ const PhoneDirectory = () => {
     setCallList(newCallList)
   }
 
-  
+  console.log(callList,'Call')
 
   return (
     <div>
-      <div onClick={() => setCheckArchived(true)}>Archived</div>
-      {checkArchived ?
-        <ArchivedCall callList={archivedCallList} /> :
-
-
-        <>
-          <h2>AirCall Phone</h2>
+     <h2>AirCall Phone</h2>
           <ul>
             {callList.map((contact) => (
               <li key={contact?.id}>
-                {contact.name}: {contact.phoneNumber} : <button onChange={handleArchivedCalls(contact?.id)}>X</button>
+                {contact.name}: {contact.phoneNumber} 
               </li>
             ))}
           </ul>
-        </>
-      }
     </div>
   );
 };
 
-export default PhoneDirectory;
+export default CallList;
