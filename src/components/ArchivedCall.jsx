@@ -1,15 +1,38 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { archiveCall, getCallDetailsById } from '../services/call'
+import moment from 'moment'
+import Popover from '@mui/material/Popover';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import DownArrow from "../assests/down-arrow.png";
+import LeftArrow from "../assests/icons8-left-50.png";
 
-const ArchivedCall = ({ list }) => {
-  
 
-  const handleArchived =async (data) => {
+const ArchivedCall = ({ list, checkArchived, setCheckArchived }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleArchiveAndClose = (data) => {
+    handleArchived(data);
+    handleClose(); // Close the Popover after handling the archived action
+  };
+
+
+  const handleArchived = async (data) => {
     try {
-      let params={is_archived: !data?.is_archived}
-      let id=data?.id
+      let params = { is_archived: !data?.is_archived }
+      let id = data?.id
 
-      const response = await archiveCall(id,params)
+      const response = await archiveCall(id, params)
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -18,7 +41,7 @@ const ArchivedCall = ({ list }) => {
   const handleLinkClick = async (id) => {
     try {
       const response = await getCallDetailsById(id)
-      console.log(response,'..............response')
+      console.log(response, '..............response')
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -28,19 +51,58 @@ const ArchivedCall = ({ list }) => {
 
   return (
     < div >
-      <h2>Archived Call</h2>
-      <ul>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <img
+          src={LeftArrow}
+          onClick={() => setCheckArchived(!checkArchived)}
+          alt="Left Arrow"
+          style={{ width: '30px', height: '30px', cursor: 'pointer' }}
+        />
+        <h2 style={{ marginLeft: '10px' }}>Archived Call</h2>
+      </div>
+      <ul className="chat-list">
         {list.map((contact) => (
-          <li key={contact?.id}>
-            <span
-              style={{ textDecoration: 'underline', cursor: 'pointer', color:'red' }}
-              onClick={() => handleLinkClick(contact?.id)}
-            >
-              {contact.call_type ?? "NA"}
-            </span>
-            : {contact.from ?? "NA"}
-            <button onClick={() => handleArchived(contact)}>X</button>
-          </li>
+          contact?.to && (
+            <li key={contact?.id} className="chat-item" >
+
+              <span
+                style={{
+                  cursor: 'pointer',
+                  color: 'red',
+                  fontSize: '25px',
+                  fontWeight: 'bold'
+                }}
+                onClick={() => handleLinkClick(contact?.id)}
+                className="direction"
+              >
+                {contact.to ?? "NA"}
+              </span>
+              <span style={{ fontSize: '12px', color: 'gray', marginLeft: '5px' }}>{contact.call_type ?? "NA"}</span>
+              <span style={{ fontSize: '12px', color: 'gray', marginLeft: '5px', float: 'right' }}>
+                {moment(contact?.created_at).format('hh:mm A')}
+              </span>
+
+              <div>
+                <Button aria-describedby={id} onClick={handleClick}>
+                  <img src={DownArrow} alt="Down Arrow" style={{ width: '16px', height: '16px' }} />
+                </Button>
+                <Popover
+                  id={id}
+                  open={open}
+                  anchorEl={anchorEl}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                  }}
+                  PaperProps={{ elevation: 0 }}
+                >
+
+                  <Typography sx={{ p: 2, cursor: 'pointer', border: '1px solid #ccc', display: 'flex', justifyContent: 'flex-end' }} onClick={() => handleArchiveAndClose(contact)}>Archive</Typography>
+                </Popover>
+              </div>
+            </li>
+          )
         ))}
       </ul>
 

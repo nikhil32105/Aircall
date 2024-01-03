@@ -10,6 +10,8 @@ import DownArrow from "../assests/down-arrow.png";
 
 const UnArchivedCall = ({ list }) => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -21,7 +23,7 @@ const UnArchivedCall = ({ list }) => {
 
   const handleArchiveAndClose = (data) => {
     handleArchived(data);
-    handleClose(); // Close the Popover after handling the archived action
+    handleClose(); 
   };
 
 
@@ -44,49 +46,52 @@ const UnArchivedCall = ({ list }) => {
     }
   }
 
-
-
-
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
-
-
   return (
-    < div className="aircall-phone-container" >
+    < div  >
       <h2>Aircall Phone</h2>
       <ul className="chat-list">
         {list.map((contact) => (
-          <li key={contact?.id} className="chat-item">
-            <span
-              style={{ textDecoration: 'underline', cursor: 'pointer', color: 'red' }}
-              onClick={() => handleLinkClick(contact?.id)}
-              className="direction"
-            >
-              {contact.to ?? "NA"}
-            </span>
-            : {contact.call_type ?? "NA"}
-            :{moment(contact?.created_at).format('HH:mm:ss')}
-            {/* <button onClick={() => handleArchived(contact)}>X</button> */}
-            <div>
-              <Button aria-describedby={id} onClick={handleClick}>
-                <img src={DownArrow} alt="Down Arrow" style={{ width: '16px', height: '16px' }} />
-              </Button>
-              <Popover
-                id={id}
-                open={open}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'left',
-                }}
-                PaperProps={{ elevation: 0 }}
+          contact?.to && (
+            <li key={contact?.id} className="chat-item" >
 
+              <span
+                style={{
+                  cursor: 'pointer',
+                  color: 'red',
+                  fontSize: '25px',
+                  fontWeight: 'bold'
+                }}
+                onClick={() => handleLinkClick(contact?.id)}
+                className="direction"
               >
-                <Typography sx={{ p: 2, cursor: 'pointer', border: '1px solid #ccc', align: 'right', display: 'flex', justifyContent: 'flex-end' }} onClick={() => handleArchiveAndClose(contact)}>Archive</Typography>
-              </Popover>
-            </div>
-          </li>
+                {contact.to ?? "NA"}
+              </span>
+              <span style={{ fontSize: '12px', color: 'gray', marginLeft: '5px' }}>{contact.call_type ?? "NA"}</span>
+              <span style={{ fontSize: '12px', color: 'gray', marginLeft: '5px', float: 'right' }}>
+                {moment(contact?.created_at).format('hh:mm A')}
+              </span>
+
+              <div>
+                <Button aria-describedby={id} onClick={handleClick}>
+                  <img src={DownArrow} alt="Down Arrow" style={{ width: '16px', height: '16px' }} />
+                </Button>
+                <Popover
+                  id={id}
+                  open={open}
+                  anchorEl={anchorEl}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: 'right',
+                    horizontal: 'right',
+                  }}
+                  PaperProps={{ elevation: 0 }}
+                >
+
+                  <Typography sx={{ p: 2, cursor: 'pointer', border: '1px solid #ccc',borderRadius:'12px', display: 'flex', justifyContent: 'flex-end' }} onClick={() => handleArchiveAndClose(contact)}>Archive</Typography>
+                </Popover>
+              </div>
+            </li>
+          )
         ))}
       </ul>
     </div>

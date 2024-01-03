@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { getCallList } from '../services/call';
 import ArchivedCall from './ArchivedCall';
 import UnArchivedCall from './UnArchivedCall';
+import "../App.css"
+import ArchiveIcon from "../assests/archive.png";
+
 
 const CallList = () => {
   const [archivedCallList, setArchivedCallList] = useState([])
@@ -26,7 +29,6 @@ const CallList = () => {
       const archivedCalllist = data?.filter(item => item?.is_archived == true)
       const sortedCallListArchived = sortCallList(archivedCalllist)
       const sortedCallListUnArchived = sortCallList(unarchivedCalllist)
-    
 
 
       // const groupedByDay = sortedCallListArchived.reduce((result, item) => {
@@ -48,20 +50,24 @@ const CallList = () => {
     }
   }
 
-
-
-
   useEffect(() => {
     fetchActivitiesData();
   }, []);
 
-
-
   return (
-    <div>
-      <button onClick={() => setCheckArchived(!checkArchived)}>{checkArchived ? "Archive Calls" : "Unarchived Calls"}</button>
+    <div className="aircall-phone-container">
+      {!checkArchived ?
+        <div style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid #ccc' }}>
+          <img src={ArchiveIcon} style={{ width: '20px', height: '20px' }} />
+          <div className="chat-item" style={{ fontSize: '20px', color: 'gray', marginLeft: '5px', cursor: 'pointer' }} onClick={() => setCheckArchived(!checkArchived)}>
+            Archived ({archivedCallList?.length})
+          </div>
+        </div>
+
+        : null
+      }
       {checkArchived ?
-        <ArchivedCall list={archivedCallList} />
+        <ArchivedCall list={archivedCallList} checkArchived={checkArchived} setCheckArchived={setCheckArchived} />
         :
         <UnArchivedCall list={callList} />
       }
