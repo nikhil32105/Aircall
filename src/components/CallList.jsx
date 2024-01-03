@@ -19,8 +19,10 @@ const CallList = () => {
   const fetchActivitiesData =  async () => {
     try {
       const response = await getCallList();
-      const list=response?.data
-      setCallList(list)
+      const unarchivedCalllist=response?.data?.filter(item=>item?.is_archived==false)
+      const archivedCalllist=response?.data?.filter(item=>item?.is_archived==true)
+setArchivedCallList(archivedCalllist)
+      setCallList(unarchivedCalllist)
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -38,6 +40,8 @@ const CallList = () => {
   useEffect(() => {
     fetchActivitiesData();
   }, []);
+
+  console.log(archivedCallList,callList)
 
 
   return (

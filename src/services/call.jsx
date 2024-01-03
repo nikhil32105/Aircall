@@ -7,6 +7,7 @@ export function getCallList() {
 }
 
 export function archiveCall(id,params) {
-  let _url = `${baseUrl.baseUrl}/${endPoint.activities}/${id}`;
-  return axios.get(_url,params)
+  console.log(id,params,'PARAMS')
+  let _url = `${baseUrl.baseUrl}${endPoint.activities}/${id}`;
+  return axios.patch(_url,params)
 }
