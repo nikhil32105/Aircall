@@ -3,6 +3,7 @@ import { baseUrl, endPoint } from '../config/url';
 
 export function getCallList() {
     let _url = baseUrl.baseUrl+endPoint.activities;
+    console.log(_url)
     return axios.get(_url)
 }
 
