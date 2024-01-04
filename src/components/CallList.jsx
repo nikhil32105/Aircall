@@ -6,6 +6,7 @@ import "../App.css";
 import ArchiveIcon from "../assests/archive.png";
 import Navbar from "./Navbar";
 import TopNavbar from "./TopNavbar";
+import AllCall from "./AllCall";
 
 const options = [
   {
@@ -212,6 +213,8 @@ const CallList = () => {
   const [archivedCallList, setArchivedCallList] = useState([]);
   const [checkArchived, setCheckArchived] = useState(false);
   const [callList, setCallList] = useState([]);
+  const [currentTab, setCurrentTab] = useState()
+  const [allCallsList, setAllCallsList] = useState([])
 
   const sortCallList = (list) => {
     const sortedArchivedCalllist = list.sort((a, b) => {
@@ -226,24 +229,19 @@ const CallList = () => {
     try {
       const response = await getCallList();
       const data = response?.data;
-      // const data = options
-      console.log("callList", data);
-      const unarchivedCalllist = data?.filter(
+      const sortedCallList = sortCallList(data)
+      setAllCallsList(sortedCallList)
+
+
+      const unarchivedCalllist = sortedCallList?.filter(
         (item) => item?.is_archived == false
       );
-      const archivedCalllist = data?.filter(
+      const archivedCalllist = sortedCallList?.filter(
         (item) => item?.is_archived == true
-      );
-      const sortedCallListArchived = sortCallList(archivedCalllist);
-      const sortedCallListUnArchived = sortCallList(unarchivedCalllist);
-      console.log("sortedCallListUnArchived", sortedCallListUnArchived);
-
-      const sortedData = sortedCallListUnArchived.sort(
-        (a, b) => new Date(b.created_at) - new Date(a.created_at)
       );
 
       // Group the sorted data by date
-      const groupedData = sortedData.reduce((result, item) => {
+      const groupedData = sortedCallList.reduce((result, item) => {
         const date = item.created_at.split("T")[0]; // Extracting the date part
         result[date] = result[date] || [];
         result[date].push(item);
@@ -252,44 +250,72 @@ const CallList = () => {
 
       console.log(groupedData, "groupedData");
 
-      setArchivedCallList(sortedCallListArchived);
-      setCallList(sortedCallListUnArchived);
+      setArchivedCallList(archivedCalllist);
+      setCallList(unarchivedCalllist);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
+  const getTabNumber = (tabNum) => {
+    setCurrentTab(tabNum)
+  }
+
   useEffect(() => {
     fetchActivitiesData();
   }, []);
 
-  return (
-    <div className="aircall-phone-container">
-      <TopNavbar />
-      {!checkArchived ? (
+  return <div className="aircall-phone-container">
+    <TopNavbar getTabNumber={getTabNumber} />
+    {currentTab === 0 && !checkArchived && (
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          borderBottom: "1px solid #ccc",
+        }}
+      >
+        <img src={ArchiveIcon} style={{ width: "20px", height: "20px" }} />
         <div
+          className="chat-item"
           style={{
-            display: "flex",
-            alignItems: "center",
-            borderBottom: "1px solid #ccc",
+            fontSize: "20px",
+            color: "gray",
+            marginLeft: "5px",
+            cursor: "pointer",
           }}
+          onClick={() => setCheckArchived(!checkArchived)}
         >
-          <img src={ArchiveIcon} style={{ width: "20px", height: "20px" }} />
-          <div
-            className="chat-item"
-            style={{
-              fontSize: "20px",
-              color: "gray",
-              marginLeft: "5px",
-              cursor: "pointer",
-            }}
-            onClick={() => setCheckArchived(!checkArchived)}
-          >
-            Archived ({archivedCallList?.length})
-          </div>
+          Archived ({archivedCallList?.length})
         </div>
-      ) : null}
-      {checkArchived ? (
+      </div>
+    )}
+
+    {currentTab === 1 && (
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          borderBottom: "1px solid #ccc",
+        }}
+      >
+      <div
+          className="chat-item"
+          style={{
+            fontSize: "20px",
+            color: "gray",
+            marginLeft: "5px",
+            cursor: "pointer",
+          }}
+          
+        >
+        Total Number of Calls ({allCallsList?.length})
+        </div>
+      </div>
+    )}
+
+    {currentTab === 0 ? (
+      checkArchived ? (
         <ArchivedCall
           list={archivedCallList}
           checkArchived={checkArchived}
@@ -297,10 +323,15 @@ const CallList = () => {
         />
       ) : (
         <UnArchivedCall list={callList} />
-      )}
-      <Navbar />
-    </div>
-  );
+      )
+    ) : (
+      <AllCall list={allCallsList} />
+    )}
+
+    <Navbar />
+  </div>
+
+
 };
 
 export default CallList;

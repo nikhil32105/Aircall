@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
-import { archiveCall, getCallDetailsById } from '../services/call'
-import moment from 'moment'
+import Button from '@mui/material/Button';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import DownArrow from "../assests/down-arrow.png";
+import moment from 'moment';
+import React, { useState } from 'react';
+import { HiOutlineDotsVertical } from "react-icons/hi";
+import { MdCallMissed, MdCallReceived } from "react-icons/md";
 import LeftArrow from "../assests/icons8-left-50.png";
+import { archiveCall, getCallDetailsById } from '../services/call';
 
 
 const ArchivedCall = ({ list, checkArchived, setCheckArchived }) => {
@@ -47,6 +48,16 @@ const ArchivedCall = ({ list, checkArchived, setCheckArchived }) => {
     }
   }
 
+  const formatPhoneNumber = (phoneNumber) => {
+    console.log(phoneNumber);
+    const temp = phoneNumber.toString();
+    if (temp && temp?.length >= 2) {
+      // Insert a dash after the first two digits
+      console.log(`${temp.substring(0, 2)}-${temp.substring(2)}`);
+      return `${temp.substring(0, 2)}-${temp.substring(2)}`;
+    }
+    return phoneNumber;
+  };
 
 
   return (
@@ -60,51 +71,81 @@ const ArchivedCall = ({ list, checkArchived, setCheckArchived }) => {
         />
         <h2 style={{ marginLeft: '10px' }}>Archived Call</h2>
       </div>
-      <ul className="chat-list">
-        {list.map((contact) => (
-          contact?.to && (
-            <li key={contact?.id} className="chat-item" >
+      <ul className="chat-list"
+        style={{
+          border: "1px solid gray",
+          borderRadius: "10px",
+          paddingLeft: "1rem",
+          paddingBottom: "1rem",
+        }}>
+        {list.map(
+          (contact) =>
+            contact?.to &&
+            contact.from && (
+              <li key={contact?.id} className="chat-item ccc">
+                <div className="call">
+                  {contact.call_type === "missed" ? (
+                    <MdCallMissed size={25} style={{ color: "red" }} />
+                  ) : (
+                    <MdCallReceived size={25} style={{ color: "green" }} />
+                  )}
+                </div>
+                <div className="contact-details">
+                  <span
+                    style={{
+                      cursor: "pointer",
+                      color: "black",
+                      fontSize: "20px",
+                      fontWeight: "bold",
+                      fontFamily: "",
+                    }}
+                    onClick={() => handleLinkClick(contact?.id)}
+                    className="direction"
+                  >
+                    {contact.from && formatPhoneNumber(contact.from)}
+                  </span>
+                  <span className="call-type">
+                    tried to call {contact.to ?? "NA"}
+                  </span>
+                </div>
+                <div className="options">
+                  <Button aria-describedby={id} onClick={handleClick}>
+                    <HiOutlineDotsVertical style={{ color: "gray" }} />
+                  </Button>
+                  <Popover
+                    id={id}
+                    open={open}
+                    anchorEl={anchorEl}
+                    onClose={handleClose}
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                    PaperProps={{ elevation: 0 }}
+                  >
+                    <Typography
+                      sx={{
+                        p: 2,
+                        cursor: "pointer",
+                        border: "1px solid #ccc",
+                        borderRadius: "12px",
+                        display: "flex",
+                        justifyContent: "flex-end",
+                      }}
+                      onClick={() => handleArchiveAndClose(contact)}
+                    >
+                      Archive
+                    </Typography>
+                  </Popover>
+                </div>
+                <span className="timestamp">
+                  {moment(contact?.created_at).format("hh:mm A")}
+                </span>
+              </li>
+            )
+        )}
 
-              <span
-                style={{
-                  cursor: 'pointer',
-                  color: 'red',
-                  fontSize: '25px',
-                  fontWeight: 'bold'
-                }}
-                onClick={() => handleLinkClick(contact?.id)}
-                className="direction"
-              >
-                {contact.to ?? "NA"}
-              </span>
-              <span style={{ fontSize: '12px', color: 'gray', marginLeft: '5px' }}>{contact.call_type ?? "NA"}</span>
-              <span style={{ fontSize: '12px', color: 'gray', marginLeft: '5px', float: 'right' }}>
-                {moment(contact?.created_at).format('hh:mm A')}
-              </span>
 
-              <div>
-                {/* <Button aria-describedby={id} onClick={handleClick}>
-                  <img src={DownArrow} alt="Down Arrow" style={{ width: '16px', height: '16px' }} />
-                </Button> */}
-                <Button variant='outlined'onClick={() => handleArchiveAndClose(contact)}>Archive</Button>
-                {/* <Popover
-                  id={id}
-                  open={open}
-                  anchorEl={anchorEl}
-                  onClose={handleClose}
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                  }}
-                  PaperProps={{ elevation: 0 }}
-                >
-
-                  <Typography sx={{ p: 2, cursor: 'pointer', border: '1px solid #ccc', display: 'flex', justifyContent: 'flex-end' }} onClick={() => handleArchiveAndClose(contact)}>Archive</Typography>
-                </Popover> */}
-              </div>
-            </li>
-          )
-        ))}
       </ul>
 
     </ div>
