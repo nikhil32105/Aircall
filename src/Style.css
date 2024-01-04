@@ -1,0 +1,41 @@
+.contact-history-container {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .chat-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .chat-item {
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .contact-details {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .call-type {
+    font-size: 12px;
+    color: gray;
+    margin-top: 5px;
+  }
+  
+  .timestamp {
+    font-size: 12px;
+    color: gray;
+    margin-top: 5px;
+  }
+  
+  .options {
+    display: flex;
+    align-items: center;
+  }
+  

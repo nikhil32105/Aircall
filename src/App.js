@@ -4,7 +4,6 @@ import CallList from './components/CallList';
 const App = () => {
   // Sample data
  
-
   return (
     <div>
       <CallList />
