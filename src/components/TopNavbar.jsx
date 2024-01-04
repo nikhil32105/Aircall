@@ -13,9 +13,9 @@ const TopNavbar = () => {
         Activity
       </div>
       <div>Inbox</div>
-      <HiOutlineDotsVertical style={{ color: "#ccc" }} />
+      {/* <HiOutlineDotsVertical style={{ color: "#ccc" }} /> */}
       <div>All calls</div>
-      <HiOutlineDotsVertical style={{ color: "#ccc" }} />
+      {/* <HiOutlineDotsVertical style={{ color: "#ccc" }} /> */}
     </div>
   );
 };

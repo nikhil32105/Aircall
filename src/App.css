@@ -10,6 +10,9 @@
 .chat-list {
   list-style-type: none;
   padding: 0;
+  max-height: 400px;
+  overflow: scroll;
+  overflow-x:hidden;
 }
 
 .chat-item {
@@ -19,6 +22,16 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: transparent; 
+  border-radius: 3px;
 }
 
 .chat-item:last-child {
@@ -31,7 +44,7 @@
 
 .call-type {
   font-size: 12px;
-  color: gray;
+  color: #7c7878;
   margin-top: 5px;
 }
 

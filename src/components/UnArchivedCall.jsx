@@ -7,7 +7,8 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import incommingCall from "../assests/incomming-.png";
-import missedCall from "../assests/missed-call.png";
+import { MdCallMissed } from "react-icons/md";
+import { MdCallReceived } from "react-icons/md";
 
 const UnArchivedCall = ({ list }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -46,6 +47,17 @@ const UnArchivedCall = ({ list }) => {
     }
   };
 
+  const formatPhoneNumber = (phoneNumber) => {
+    console.log(phoneNumber);
+    const temp = phoneNumber.toString();
+    if (temp && temp?.length >= 2) {
+      // Insert a dash after the first two digits
+      console.log(`${temp.substring(0, 2)}-${temp.substring(2)}`);
+      return `${temp.substring(0, 2)}-${temp.substring(2)}`;
+    }
+    return phoneNumber;
+  };
+
   return (
     <div className="contact-history-container">
       <h2>Aircall Phone</h2>
@@ -60,31 +72,33 @@ const UnArchivedCall = ({ list }) => {
       >
         {list.map(
           (contact) =>
-            contact?.to && (
-              <li key={contact?.id} className="chat-item">
+            contact?.to &&
+            contact.from && (
+              <li key={contact?.id} className="chat-item ccc">
                 <div className="call">
                   {contact.call_type === "missed" ? (
-                    <img src={missedCall} className="call-image" />
+                    <MdCallMissed size={25} style={{ color: "red" }} />
                   ) : (
-                    <img src={incommingCall} className="call-image" />
+                    <MdCallReceived size={25} style={{ color: "green" }} />
                   )}
                 </div>
                 <div className="contact-details">
-                    <span
-                      style={{
-                        cursor: "pointer",
-                        color: "red",
-                        fontSize: "20px",
-                        fontWeight: "bold",
-                      }}
-                      onClick={() => handleLinkClick(contact?.id)}
-                      className="direction"
-                    >
-                      {contact.to ?? "NA"}
-                    </span>
-                    <span className="call-type">
-                      {contact.call_type ?? "NA"}
-                    </span>
+                  <span
+                    style={{
+                      cursor: "pointer",
+                      color: "black",
+                      fontSize: "20px",
+                      fontWeight: "bold",
+                      fontFamily: "",
+                    }}
+                    onClick={() => handleLinkClick(contact?.id)}
+                    className="direction"
+                  >
+                    {contact.from && formatPhoneNumber(contact.from)}
+                  </span>
+                  <span className="call-type">
+                    tried to call {contact.to ?? "NA"}
+                  </span>
                 </div>
                 <div className="options">
                   <Button aria-describedby={id} onClick={handleClick}>

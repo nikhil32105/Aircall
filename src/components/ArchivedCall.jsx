@@ -83,10 +83,11 @@ const ArchivedCall = ({ list, checkArchived, setCheckArchived }) => {
               </span>
 
               <div>
-                <Button aria-describedby={id} onClick={handleClick}>
+                {/* <Button aria-describedby={id} onClick={handleClick}>
                   <img src={DownArrow} alt="Down Arrow" style={{ width: '16px', height: '16px' }} />
-                </Button>
-                <Popover
+                </Button> */}
+                <Button variant='outlined'onClick={() => handleArchiveAndClose(contact)}>Archive</Button>
+                {/* <Popover
                   id={id}
                   open={open}
                   anchorEl={anchorEl}
@@ -99,7 +100,7 @@ const ArchivedCall = ({ list, checkArchived, setCheckArchived }) => {
                 >
 
                   <Typography sx={{ p: 2, cursor: 'pointer', border: '1px solid #ccc', display: 'flex', justifyContent: 'flex-end' }} onClick={() => handleArchiveAndClose(contact)}>Archive</Typography>
-                </Popover>
+                </Popover> */}
               </div>
             </li>
           )
