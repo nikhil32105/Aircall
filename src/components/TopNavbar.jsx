@@ -1,9 +1,21 @@
 
-import React from "react";
+import React , {useState , useEffect}from "react";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import activityCall from "../assests/activityCall.png";
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
-const TopNavbar = () => {
+const TopNavbar = ({getTabNumber}) => {
+  const [activeTab, setActiveTab] = useState(0);
+
+  const handleTabChange = (event, newValue) => {
+    setActiveTab(newValue);
+  };
+
+  useEffect(() => {
+    getTabNumber(activeTab)
+  }, [activeTab]);
+
   return (
     <div className="t-navbar">
       <div className="activity">
@@ -12,10 +24,17 @@ const TopNavbar = () => {
         </span>
         Activity
       </div>
-      <div>Inbox</div>
-      {/* <HiOutlineDotsVertical style={{ color: "#ccc" }} /> */}
-      <div>All calls</div>
-      {/* <HiOutlineDotsVertical style={{ color: "#ccc" }} /> */}
+      <Tabs
+        value={activeTab}
+        onChange={handleTabChange}
+        indicatorColor="primary"
+        textColor="primary"
+        centered
+      >
+        {/* <Tab label="Activity" icon={<img src={activityCall} alt="Activity" className="activity-icon" />} /> */}
+        <Tab label="Inbox" />
+        <Tab label="All Calls" />
+      </Tabs>
     </div>
   );
 };
